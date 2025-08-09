@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quiz — Culture G · Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+    .logo {
+  font-family: 'Inter', system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+  cursor: default;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.curiosity {
+  background: linear-gradient(90deg, #ffb86b, #ff8a4b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+  filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.25));
+}
+
+  :root{
+    --bg1:#0f1724; --bg2:#071024; --card:#0f1728;
+    --accent:#ffb86b; --good:#64e986; --bad:#ff6b6b;
+    --glass: rgba(255,255,255,0.04);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:'Inter',system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;
+    background: linear-gradient(135deg,var(--bg1),var(--bg2));
+    color:#e6eef8; -webkit-font-smoothing:antialiased;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:28px;
+    font-size:22px; /* augmenté */
+  }
+  .app{
+    width:100%; max-width:1220px; background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);
+    border-radius:16px; padding:30px 25px; box-shadow:0 8px 40px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03);
+  }
+  header{display:flex; gap:12px; align-items:center; justify-content:space-between;}
+  header h1{
+    margin:0;
+    font-size:28px; /* augmenté */
+    letter-spacing:0.6px; display:flex;align-items:center; gap:10px;
+  }
+  header .meta{
+    font-size:14px; /* augmenté */
+    color: #99a8bf;
+  }
+  .controls{
+    display:flex; gap:10px; align-items:center; margin:22px 0 30px; flex-wrap:wrap;
+    font-size:18px; /* augmenté */
+  }
+  .controls input[type=number], .controls select{
+    background:var(--card); border:1px solid rgba(255,255,255,0.04); color:inherit; padding:10px 14px; border-radius:10px;
+    font-size:18px; /* augmenté */
+  }
+  .controls label{font-size:18px; color:#9fb3cf}
+  button.primary{
+    background:linear-gradient(90deg,var(--accent),#ff8a4b); border:none; color:#071024; padding:14px 22px; border-radius:14px; font-weight:700;
+    cursor:pointer; box-shadow:0 6px 18px rgba(255,184,107,0.12);
+    font-size:22px; /* augmenté */
+  }
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    padding:24px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .question-area{
+    display:flex; gap:22px; align-items:flex-start; margin-top:22px; flex-wrap:wrap;
+  }
+  .left{
+    flex:1; min-width:300px;
+  }
+  .qhead{
+    display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:12px;
+  }
+  .qnum{
+    font-weight:700; font-size:18px; /* augmenté */
+  }
+  .progressbar{
+    height:12px; /* plus épaisse */
+    background:rgba(255,255,255,0.04);
+    border-radius:8px;
+    overflow:hidden;
+    flex:1;
+  }
+  .progressbar > i{
+    display:block; height:100%; background:linear-gradient(90deg,var(--accent),#ffd9b0);
+    width:0%;
+    transition: width 0.3s ease;
+  }
+  .question{
+    font-size:24px; /* plus gros */
+    line-height:1.4; margin:16px 0 22px;
+  }
+  .answer-row{
+    display:flex; gap:12px; align-items:center;
+  }
+  input[type=text]{
+    flex:1; padding:18px 24px; border-radius:18px; border:2px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.08); color:#fff;
+    font-size:24px; /* zone de saisie plus grande */
+    font-weight:600;
+    outline:none;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+  input[type=text]:focus{
+    border-color: var(--accent);
+    background: rgba(255,184,107,0.15);
+    color:#071024;
+  }
+  .small{
+    font-size:14px;
+    color:#94a9c7;
+  }
+  .timer{
+    font-weight:800; color:var(--accent); font-size:26px;
+  }
+  .scorebox{
+    width:260px; min-width:240px;
+  }
+  .scorebox h3{
+    margin:0 0 10px 0; font-size:18px;
+  }
+  .score{
+    font-size:44px; font-weight:800; color:#fff; margin-bottom:14px;
+  }
+  .log{
+    margin-top:16px; max-height:280px; overflow:auto; padding-right:8px;
+  }
+  .entry{
+    display:flex; justify-content:space-between; gap:12px; padding:12px; border-radius:10px; margin-bottom:12px; background:var(--glass);
+    font-size:18px;
+  }
+  .entry .who{
+    font-weight:700;
+    flex:1;
+  }
+  .entry .res.good{color:var(--good)}
+  .entry .res.bad{color:var(--bad)}
+  footer{
+    display:flex; justify-content:space-between; align-items:center; margin-top:22px;
+    font-size:16px;
+  }
+  .recap{
+    display:none; margin-top:18px;
+  }
+  .recap .bigscore{
+    font-size:32px; font-weight:800; color:var(--accent);
+  }
+  .btn-ghost{
+    background:transparent; border:1px solid rgba(255,255,255,0.04); padding:12px 16px; border-radius:12px; color:inherit; cursor:pointer;
+    font-size:18px;
+  }
+  .hint{
+    font-size:15px; color:#9fb3cf; margin-top:12px;
+  }
+  .final-list{
+    margin-top:16px;
+  }
+  .final-item{
+    padding:14px; border-radius:12px; background:rgba(255,255,255,0.02); margin-bottom:12px; display:flex; justify-content:space-between; gap:12px;
+    font-size:18px;
+  }
+
+  /* --- NOUVEAU : gestion questions --- */
+  .admin-section {
+    margin-top: 36px;
+    padding: 24px;
+    background: #071024cc;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .admin-section h2 {
+    font-size: 26px;
+    margin-bottom: 18px;
+    color: var(--accent);
+  }
+  .admin-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .admin-row input[type="text"] {
+    flex: 1 1 40%;
+    padding: 14px 18px;
+    font-size: 20px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+  .admin-row input[type="text"]:focus {
+    border-color: var(--accent);
+    background: rgba(255,184,107,0.15);
+    color: #071024;
+  }
+  .admin-row button {
+    padding: 14px 26px;
+    background: var(--accent);
+    border: none;
+    border-radius: 14px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #071024;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .admin-row button:hover {
+    background: #ff9f42;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1 class="logo">
+  <span class="curiosity">Curiosity</span>
+</h1>
+
+    <h1>Quiz — Culture G <span style="font-size:16px; color:#99a8bf">· Session instantanée</span></h1>
+    <div class="meta">Généré par ton assistant — tolérance orthographique incluse</div>
+  </header>
+
+  <div class="controls">
+    <label>Nombre de questions:
+      <input id="numQ" type="number" min="1" max="50" value="10" style="width:96px; margin-left:8px">
+    </label>
+
+    <label style="display:flex; align-items:center; gap:8px">
+      Timer / question:
+      <select id="perQtime" style="margin-left:8px">
+        <option value="0">Désactivé</option>
+        <option value="10">10s</option>
+        <option value="20">20s</option>
+        <option value="30" selected>30s</option>
+        <option value="60">60s</option>
+      </select>
+    </label>
+
+    <label style="display:flex; align-items:center; gap:8px">
+      Difficulté:
+      <select id="difficulty" style="margin-left:8px">
+        <option value="mixed" selected>Mixte</option>
+        <option value="easy">Facile</option>
+        <option value="medium">Moyen</option>
+        <option value="hard">Difficile</option>
+      </select>
+    </label>
+
+    <button class="primary" id="startBtn">Lancer la session</button>
+    <button class="btn-ghost" id="resetBtn">Réinitialiser</button>
+  </div>
+
+  <div class="card">
+    <div class="question-area">
+      <div class="left">
+        <div class="qhead">
+          <div class="qnum">Question <span id="qIndex">0</span> / <span id="qTotal">0</span></div>
+          <div class="progressbar"><i id="progressInner"></i></div>
+        </div>
+
+        <div class="question" id="questionText">Appuie sur "Lancer la session" pour démarrer.</div>
+
+        <div class="answer-row">
+          <input id="answerInput" placeholder="Tape ta réponse puis ENTER" autocomplete="off" />
+          <button class="primary" id="submitBtn">Valider</button>
+        </div>
+
+        <div class="hint small" id="hintText">Astuce: la correction ignore la casse et supporte de petites fautes.</div>
+      </div>
+
+      <aside class="scorebox card">
+        <h3>Score</h3>
+        <div class="score" id="scoreVal">0</div>
+        <div style="display:flex; gap:8px; align-items:center; justify-content:space-between">
+          <div class="small">Temps:</div>
+          <div class="timer" id="timerDisplay">00</div>
+        </div>
+
+        <div class="log" id="logBox" aria-live="polite" style="margin-top:12px">
+          <!-- history entries -->
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="small">Progression: <span id="progressText">0%</span></div>
+      <div>
+        <button class="btn-ghost" id="prevBtn">◀ Précédent</button>
+        <button class="btn-ghost" id="nextBtn">Suivant ▶</button>
+      </div>
+    </footer>
+
+    <section class="recap" id="recap">
+      <h3>Récapitulatif de la session</h3>
+      <div class="bigscore" id="finalScore">0 / 0 (0%)</div>
+      <div class="final-list" id="finalList"></div>
+      <div style="display:flex; gap:8px; margin-top:10px">
+        <button class="primary" id="retryBtn">Rejouer même session</button>
+        <button class="btn-ghost" id="newBtn">Nouvelle session</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- NOUVEAU : Section ajout questions personnalisées -->
+  <section class="admin-section">
+    <h2>Ajouter tes propres questions</h2>
+    <div class="admin-row">
+      <input type="text" id="newQuestion" placeholder="Question (ex: Quelle est la capitale du Togo ?)" />
+      <input type="text" id="newAnswers" placeholder="Réponses acceptées, séparées par des virgules" />
+      <select id="newDifficulty">
+        <option value="easy">Facile</option>
+        <option value="medium" selected>Moyen</option>
+        <option value="hard">Difficile</option>
+      </select>
+      <button id="addQuestionBtn">Ajouter</button>
+    </div>
+    <div id="adminMsg" style="color:#ffb86b; font-weight:700; margin-top:8px;"></div>
+  </section>
+</div>
+
+<script>
+/* =========================
+   BANQUE DE QUESTIONS INITIALE
+   ========================= */
+const STATIC_QUESTION_BANK = [
+  { q:"Quel est le plus grand océan du monde ?", a:["océan pacifique","pacifique","pacifique océan"], difficulty:"easy" },
+  { q:"Qui a écrit 'Les Misérables' ?", a:["victor hugo","hugo"], difficulty:"easy" },
+  { q:"En quelle année l'homme a-t-il marché sur la Lune pour la première fois ?", a:["1969"], difficulty:"easy" },
+  { q:"Quelle est la capitale du Japon ?", a:["tokyo","tokyô"], difficulty:"easy" },
+  { q:"Combien de côtés possède un hexagone ?", a:["6","six"], difficulty:"easy" },
+  { q:"Quel gaz les plantes absorbent-elles principalement pour la photosynthèse ?", a:["dioxyde de carbone","co2","dioxyde de carbone (co2)"], difficulty:"easy" },
+
+  { q:"Qui a peint 'La Joconde' ?", a:["léonard de vinci","leonard de vinci","da vinci"], difficulty:"medium" },
+  { q:"Quel est l'organe principal du système nerveux central ?", a:["cerveau"], difficulty:"medium" },
+  { q:"Quel élément chimique a pour symbole 'Fe' ?", a:["fer","fe"], difficulty:"medium" },
+  { q:"Quelle est la monnaie officielle du Royaume-Uni ?", a:["livre sterling","sterling","pound","pound sterling"], difficulty:"medium" },
+  { q:"Qui a découvert la loi de la gravitation universelle (légende: pomme) ?", a:["isaac newton","newton"], difficulty:"medium" },
+  { q:"Quel pays a organisé la Coupe du Monde de la FIFA 2018 ?", a:["russie","fédération de russie","russia","russian federation"], difficulty:"medium" },
+
+  { q:"Quel est le plus long fleuve du monde (par longueur) ?", a:["nile","nil","fleuve nil","nile (nil)"], difficulty:"hard" },
+  { q:"Qui a écrit 'À la recherche du temps perdu' ?", a:["marcel proust","proust"], difficulty:"hard" },
+  { q:"Quelle est la constante de la vitesse de la lumière en m/s (approx) ?", a:["299792458","3e8","299792458 m/s","299 792 458"], difficulty:"hard" },
+  { q:"Quel compositeur est l'auteur de la 'Neuvième Symphonie' (Ode à la Joie) ?", a:["ludwig van beethoven","beethoven"], difficulty:"hard" },
+  { q:"Quel mathématicien a formulé les principes de l'algèbre boolean ?", a:["george boole","boole"], difficulty:"hard" },
+  { q:"Quel pays a le plus grand nombre d'îles habitées au monde ? (réponse: Indonésie/Philippines)", a:["indonésie","indonesia","philippines"], difficulty:"hard" },
+
+  /* autres questions ici... */
+];
+
+/* ====== LOCAL STORAGE GESTION DES QUESTIONS AJOUTÉES ====== */
+function getCustomQuestions(){
+  try {
+    const q = localStorage.getItem('customQuestions');
+    if(!q) return [];
+    return JSON.parse(q);
+  } catch(e){
+    return [];
+  }
+}
+function saveCustomQuestions(qs){
+  localStorage.setItem('customQuestions', JSON.stringify(qs));
+}
+
+/* ====== COMBINER LES BANQUES ====== */
+function getFullQuestionBank(){
+  return STATIC_QUESTION_BANK.concat(getCustomQuestions());
+}
+
+/* ==============
+   STATE & HELPERS
+   ============== */
+let state = {
+  pool: [],
+  index: 0,
+  score: 0,
+  answers: [],
+  perQtime: 30,
+  running: false,
+  timerId: null,
+  timeLeft: 0
+};
+
+const el = id => document.getElementById(id);
+
+/* ====== fuzzy compare (Levenshtein distance) ====== */
+function normalizeText(s){
+  return s.normalize('NFD').replace(/\p{Diacritic}/gu,"").toLowerCase().trim();
+}
+
+function levenshtein(a,b){
+  a = normalizeText(a); b = normalizeText(b);
+  if(a===b) return 0;
+  const m=a.length, n=b.length;
+  if(m===0) return n;
+  if(n===0) return m;
+  let v0 = new Array(n+1), v1 = new Array(n+1);
+  for(let j=0;j<=n;j++) v0[j]=j;
+  for(let i=0;i<m;i++){
+    v1[0]=i+1;
+    for(let j=0;j<n;j++){
+      let cost = a[i]===b[j]?0:1;
+      v1[j+1] = Math.min(v1[j]+1, v0[j+1]+1, v0[j]+cost);
+    }
+    [v0,v1]=[v1,v0];
+  }
+  return v0[n];
+}
+
+function fuzzyMatch(candidate, accepted){
+  candidate = normalizeText(candidate);
+  for(const acc of accepted){
+    const accN = normalizeText(acc);
+    if(accN.length===0) continue;
+    if(candidate === accN) return true;
+    if(candidate.includes(accN) || accN.includes(candidate)) return true;
+    const dist = levenshtein(candidate, accN);
+    const thresh = Math.max(1, Math.floor(accN.length * 0.22));
+    if(dist <= thresh) return true;
+  }
+  return false;
+}
+
+/* ===== UI / Session logic ===== */
+function pickQuestions(count, difficulty){
+  let pool = getFullQuestionBank();
+  if(difficulty !== 'mixed'){
+    pool = pool.filter(q => q.difficulty === difficulty);
+    if(pool.length < count){
+      pool = pool.concat(getFullQuestionBank().filter(q=>q.difficulty !== difficulty));
+    }
+  }
+  for(let i=pool.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, Math.min(count, pool.length));
+}
+
+function startSession(){
+  const num = parseInt(el('numQ').value) || 10;
+  const diff = el('difficulty').value;
+  state.pool = pickQuestions(num, diff);
+  state.index = 0; state.score = 0; state.answers = [];
+  state.perQtime = parseInt(el('perQtime').value) || 0;
+  el('qTotal').textContent = state.pool.length;
+  el('qIndex').textContent = 0;
+  el('progressInner').style.width = '0%';
+  el('progressText').textContent = '0%';
+  el('recap').style.display = 'none';
+  el('logBox').innerHTML = '';
+  el('scoreVal').textContent = '0';
+  el('timerDisplay').textContent = state.perQtime>0 ? state.perQtime : '—';
+  el('answerInput').value='';
+  el('answerInput').disabled = false;
+  el('submitBtn').disabled = false;
+  state.running = true;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  if(state.index >= state.pool.length){
+    finishSession();
+    return;
+  }
+  const item = state.pool[state.index];
+  el('qIndex').textContent = state.index+1;
+  el('questionText').textContent = item.q;
+  el('answerInput').value = '';
+  el('answerInput').focus();
+  updateProgress();
+  if(state.perQtime > 0){
+    state.timeLeft = state.perQtime;
+    el('timerDisplay').textContent = state.timeLeft;
+    clearInterval(state.timerId);
+    state.timerId = setInterval(()=>{
+      state.timeLeft--;
+      el('timerDisplay').textContent = state.timeLeft;
+      if(state.timeLeft<=0){
+        clearInterval(state.timerId);
+        submitAnswer('');
+      }
+    },1000);
+  } else {
+    el('timerDisplay').textContent = '—';
+    clearInterval(state.timerId);
+  }
+}
+
+function submitAnswer(given){
+  if(!state.running) return;
+  clearInterval(state.timerId);
+  const item = state.pool[state.index];
+  const correct = fuzzyMatch(given, item.a);
+  const correctAns = item.a[0] || '(réponse non fournie)';
+  state.answers.push({
+    q: item.q,
+    correctAns: correctAns,
+    given: given,
+    correct: correct,
+    timeTaken: state.perQtime>0 ? (state.perQtime - state.timeLeft) : null
+  });
+  if(correct){ state.score += 1; el('scoreVal').textContent = state.score; }
+  const entry = document.createElement('div');
+  entry.className = 'entry';
+  entry.innerHTML = `<div class="who">${item.q}</div>
+    <div class="res ${correct? 'good':'bad'}">${correct? '✔':'✖'}</div>`;
+  el('logBox').prepend(entry);
+  el('questionText').style.opacity = '0.6';
+  setTimeout(()=> el('questionText').style.opacity = '1', 260);
+  state.index++;
+  setTimeout(()=>{
+    if(state.index < state.pool.length) renderQuestion();
+    else finishSession();
+  }, 260);
+  updateProgress();
+}
+
+function updateProgress(){
+  const total = state.pool.length || 1;
+  const p = Math.round((state.index / total) * 100);
+  el('progressInner').style.width = p + '%';
+  el('progressText').textContent = p + '%';
+}
+
+function finishSession(){
+  state.running = false;
+  clearInterval(state.timerId);
+  el('recap').style.display = 'block';
+  const total = state.pool.length;
+  const correct = state.score;
+  const pct = Math.round((correct/total)*100);
+  el('finalScore').textContent = `${correct} / ${total} (${pct}%)`;
+  const list = el('finalList');
+  list.innerHTML = '';
+  state.answers.forEach((a,i)=>{
+    const div = document.createElement('div');
+    div.className = 'final-item';
+    const left = document.createElement('div');
+    left.style.maxWidth = '65%';
+    left.innerHTML = `<strong>Q${i+1}</strong> ${a.q} <div style="font-size:13px; color:#9fb3cf">Ta réponse: ${a.given || '(vide)'}</div>`;
+    const right = document.createElement('div');
+    right.style.textAlign = 'right';
+    right.innerHTML = `<div style="font-weight:800">${a.correct? '<span style="color:var(--good)">✔ Correct</span>' : '<span style="color:var(--bad)">✖ Faux</span>'}</div>
+                       <div style="font-size:13px; color:#9fb3cf">Réponse: ${a.correctAns}</div>`;
+    div.appendChild(left);
+    div.appendChild(right);
+    list.appendChild(div);
+  });
+}
+
+/* ===== Gestion ajout questions personnalisées ===== */
+el('addQuestionBtn').addEventListener('click', ()=>{
+  const q = el('newQuestion').value.trim();
+  const a = el('newAnswers').value.trim();
+  const d = el('newDifficulty').value;
+  if(!q || !a){
+    el('adminMsg').textContent = "Merci de remplir la question et au moins une réponse.";
+    return;
+  }
+  const answersArray = a.split(',').map(s=>s.trim()).filter(s=>s.length>0);
+  if(answersArray.length === 0){
+    el('adminMsg').textContent = "Merci d'entrer au moins une réponse valide.";
+    return;
+  }
+  // add to custom questions
+  const custom = getCustomQuestions();
+  custom.push({q: q, a: answersArray, difficulty: d});
+  saveCustomQuestions(custom);
+  el('adminMsg').textContent = "Question ajoutée avec succès !";
+  el('newQuestion').value = '';
+  el('newAnswers').value = '';
+  el('newDifficulty').value = 'medium';
+});
+
+/* ===== Navigation buttons for review (prev/next) and replay etc. */
+el('prevBtn').addEventListener('click', ()=>{
+  if(state.index > 1){
+    state.index = Math.max(0, state.index-2);
+    state.answers.pop();
+    state.score = state.answers.filter(a=>a.correct).length;
+    el('scoreVal').textContent = state.score;
+    renderQuestion();
+  }
+});
+el('nextBtn').addEventListener('click', ()=>{
+  if(state.index < state.pool.length){
+    submitAnswer('');
+  }
+});
+el('retryBtn').addEventListener('click', ()=>{
+  state.pool = shuffleArray(state.pool);
+  state.index = 0; state.score = 0; state.answers = [];
+  el('recap').style.display = 'none';
+  el('scoreVal').textContent = '0';
+  el('logBox').innerHTML = '';
+  renderQuestion();
+});
+el('newBtn').addEventListener('click', ()=>{
+  el('recap').style.display = 'none';
+  el('logBox').innerHTML = '';
+  el('scoreVal').textContent = '0';
+});
+
+function shuffleArray(a){
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ===== Initial UI Setup ===== */
+el('qTotal').textContent = '0';
+el('qIndex').textContent = '0';
+el('progressInner').style.width = '0%';
+
+/* ===== Style améliorations sur input texte (via JS) ===== */
+const answerInput = el('answerInput');
+answerInput.style.fontSize = '20px';
+answerInput.style.padding = '14px 18px';
+answerInput.style.borderRadius = '14px';
+answerInput.style.border = '2px solid var(--accent)';
+answerInput.style.background = 'rgba(255,255,255,0.05)';
+answerInput.style.color = 'white';
+answerInput.style.fontWeight = '600';
+answerInput.style.letterSpacing = '0.04em';
+
+/* Agrandir les questions et score */
+el('questionText').style.fontSize = '24px';
+el('scoreVal').style.fontSize = '48px';
+
+/* Ajouter styles à la section admin */
+const adminSection = document.querySelector('.admin-section');
+adminSection.style.background = 'rgba(255, 255, 255, 0.05)';
+adminSection.style.padding = '20px';
+adminSection.style.borderRadius = '16px';
+adminSection.style.marginTop = '24px';
+adminSection.style.color = '#ffb86b';
+adminSection.style.fontWeight = '600';
+
+const adminInputs = document.querySelectorAll('.admin-row input, .admin-row select, .admin-row button');
+adminInputs.forEach(elm=>{
+  elm.style.padding = '10px 14px';
+  elm.style.fontSize = '16px';
+  elm.style.borderRadius = '12px';
+  elm.style.border = '1px solid rgba(255,255,255,0.1)';
+  elm.style.background = 'rgba(255,255,255,0.08)';
+  elm.style.color = '#fff';
+  elm.style.fontWeight = '600';
+  elm.style.marginRight = '10px';
+  elm.style.transition = 'background 0.3s ease';
+  elm.onfocus = () => elm.style.background = 'rgba(255,255,255,0.2)';
+  elm.onblur = () => elm.style.background = 'rgba(255,255,255,0.08)';
+});
+
+el('startBtn').addEventListener('click', startSession);
+el('startBtn').addEventListener('click', startSession);
+
+el('submitBtn').addEventListener('click', () => {
+  submitAnswer(el('answerInput').value);
+});
+
+el('answerInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){
+    submitAnswer(el('answerInput').value);
+  }
+});
+
+el('resetBtn').addEventListener('click', () => {
+  state.running = false;
+  clearInterval(state.timerId);
+
+  el('qIndex').textContent = '0';
+  el('qTotal').textContent = '0';
+  el('progressInner').style.width = '0%';
+  el('progressText').textContent = '0%';
+  el('scoreVal').textContent = '0';
+  el('timerDisplay').textContent = '—';
+  el('questionText').textContent = 'Appuie sur "Lancer la session" pour démarrer.';
+  el('answerInput').value = '';
+  el('answerInput').disabled = true;
+  el('submitBtn').disabled = true;
+  el('logBox').innerHTML = '';
+  el('recap').style.display = 'none';
+
+  state.pool = [];
+  state.index = 0;
+  state.score = 0;
+  state.answers = [];
+});
+
+/* Fin du script */
+</script>
+</body>
+</html>  
+  
